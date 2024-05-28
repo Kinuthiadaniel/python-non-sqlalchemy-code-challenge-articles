@@ -59,8 +59,6 @@ class Author:
     def articles(self):
         return [article for article in Article.all_articles if article.author == self ]
 
-        
-
     def magazines(self):
         return list(set(article.magazine for article in self.articles()))
 
@@ -68,14 +66,21 @@ class Author:
         return Article(self,magazine, title)
 
     def topic_areas(self):
-        pass
+        if not self._articles():
+            return None
+        else:
+            return list(set([magazine.category for magazine in self.magazine()]))
+
+    
 
 class Magazine:
+    all_magazine = []
    
     def __init__(self, name, category):
         self.name = name
         self.category = category
         self._articles = []
+        Magazine.all_magazine.append(self)
         
         
 
@@ -105,12 +110,11 @@ class Magazine:
 
 
     def articles(self):
-        return self._articles
+        pass
+        return [article for article in Article.all_articles if isinstance(article, Article)]
 
     def contributors(self):
-        author = [article.author for article in self._articles]
-        return list(set(author))
-
+        return list(set(article.author for article in self.articles()))
     def article_titles(self):
         pass
 
