@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 class Article:
 
     all =[]
@@ -121,13 +123,11 @@ class Magazine:
         return titles if titles else None
 
     def contributing_authors(self):
-        author_counts = {}
+        articles_per_author = defaultdict(int)
         for article in self.articles():
-             author = article.author
-        author_counts[author] = author_counts.get(author, 0) + 1
-        contributing_authors = [author for author, count in author_counts.items() if count > 2]
-        return contributing_authors
-
+            articles_per_author[article.author] += 1
+        contributing_authors = [author for author, count in articles_per_author.items() if count > 2]
+        return contributing_authors if contributing_authors else None
 
 ag =Magazine("rsc","xsscs")
 ag2 = Magazine("new","ols")
