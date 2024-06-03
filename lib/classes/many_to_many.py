@@ -1,11 +1,11 @@
 class Article:
 
-    all_articles = []
+    all =[]
     def __init__(self, author, magazine, title):
         self.author = author
         self.magazine = magazine
         self.title = title
-        Article.all_articles.append(self)
+        Article.all.append(self)
 
     @property
     def title(self):
@@ -18,30 +18,31 @@ class Article:
         else:
             return "Title characters must be 5 to 50 characters"
 
-    @property
-    def author(self):
-        return self._author
+    # @property
+    # def author(self):
+    #     return self._author
 
-    @author.setter
-    def author(self, author):
-        if isinstance(author, Author):
-            self._author = author
-        else:
-            return "Author must be of instance author"
+    # @author.setter
+    # def author(self, author):
+    #     if isinstance(author, Author):
+    #         self._author = author
+    #     else:
+    #         return "Author must be of instance author"
         
-    @property
-    def magazine(self):
-        return self._magazine
+    # @property
+    # def magazine(self):
+    #     return self._magazine
 
-    @magazine.setter
-    def magazine(self, magazine):
-        if isinstance(magazine, Magazine):
-            self._magazine = magazine
+    # @magazine.setter
+    # def magazine(self, magazine):
+    #     if isinstance(magazine, Magazine):
+    #         self._magazine = magazine
             
 
 class Author:
     def __init__(self, name):
        self.name = name
+
 
     @property
     def name(self):
@@ -57,19 +58,19 @@ class Author:
 
 
     def articles(self):
-        return [article for article in Article.all_articles if article.author == self ]
+        return [article for article in Article.all if article.author == self ]
 
     def magazines(self):
-        return list(set(article.magazine for article in self.articles()))
+        return list(set([article.magazine for article in self.articles()]))
 
     def add_article(self, magazine, title):
         return Article(self,magazine, title)
 
     def topic_areas(self):
-        if not self._articles():
+        topics = list(set(article.magazine.category for article in self.articles()))
+        if len(self.articles()) == 0:
             return None
-        else:
-            return list(set([magazine.category for magazine in self.magazine()]))
+        return topics
 
     
 
@@ -111,15 +112,22 @@ class Magazine:
 
     def articles(self):
         pass
-        return [article for article in Article.all_articles if isinstance(article, Article)]
+        return [article for article in Article.all if article.magazine == self]
 
     def contributors(self):
-        return list(set(article.author for article in self.articles()))
+        return list(set([article.author for article in self.articles()]))
     def article_titles(self):
-        pass
+        titles = [article.title for article in Article.all if article.magazine == self]
+        return titles if titles else None
 
     def contributing_authors(self):
-        pass
+        author_counts = {}
+        for article in self.articles():
+             author = article.author
+        author_counts[author] = author_counts.get(author, 0) + 1
+        contributing_authors = [author for author, count in author_counts.items() if count > 2]
+        return contributing_authors
+
 
 ag =Magazine("rsc","xsscs")
 ag2 = Magazine("new","ols")
